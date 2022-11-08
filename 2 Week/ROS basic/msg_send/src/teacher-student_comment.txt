@@ -1,0 +1,18 @@
+"student.py"와 "teacher.py"의 상호 동작
+
+- teacher.py 
+    : node 이름: 'teacher'
+    : 'my_topic' 이름의 topic 발행
+    : 'call me please'라는 message를 발행
+    : 2Hz로 동작.
+    : node가 종료될 때까지 무한 반복
+
+
+- student.py
+    : node 이름: 'student'
+    : 'my_topic' 이름의 topic 구독
+    : callback 함수를 정의하여, 'my_topic' 토픽일 올 때마다 그 안에 담긴 data 출력
+
+
+- 동작 결과
+    : teacher 노드가 'my_topic'라는 이름의 topic에 "call me please" 문자열을 보내면, student 노드가 해당 토픽을 받아, 그 안에 담긴 문자열 화면에 출력

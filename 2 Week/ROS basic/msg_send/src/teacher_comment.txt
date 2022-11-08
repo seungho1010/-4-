@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+-> comment
+- 파일의 첫 줄에 #!로 시작되는 라인을 Shebang 라인이라고 함.
+    : 해당 파일의 실행에 어떤 인터프리터를 사용할지 지정
+    : PATH 환경변수에서 가장 우선되는 인터프리터를 찾아 스크립트 파일 실행
+- Python의 경우
+    : Shebang 라인이 들어간 경우엔 ./teacher.py 형식으로 실행 가능.
+    : 파이썬 버전을 구분해서 지정할 때도 사용. (ex, #!/usr/bin/env python3)
+
+
+import rospy
+-> comment
+- rospy 라이브러리 import
+- import 키워드는 모듈, 패키지, 파이썬 표준 라이브러리 등을 가져옴.
+- rospy는 ROS의 파이썬 클라이언트 라이브러리	
+    : ROS Topic, Services, Parameter의 interface를 사용 가능.
+    : rospy는 실행속도 보다는 구현의 편의성을 더 중요하게 생각 -> 빠르게 구현 할 때 유용
+
+
+from std_msgs.msg import String
+-> comment
+- from - import는 모듈의 일부를 가져올 수 있음.
+    : from 뒤에 모듈 이름을 정하고 import 뒤에 가져올 변수, 함수, 클래스를 입력
+- import로 모듈을 불러 올 때, 사용자가 이름 설정 가능
+    : (ex, import numpy as np)
+
+
+rospy.init_node('teacher')
+-> comment
+- 해당 노드 초기화, 노드이름 'teacher'로 함.
+- 노드 관리 및 통합 -> ROS 프레임워크가 하는 일 -> python으로 만든 것이 rospy
+- ROS 시스템 상에서 노드들이 topic을 주고 받기 위해서는 노드에 고유한 이름을 할당 해야 함.
+    : 위의 경우 노드 이름은 'teacher'
+    : 노드의 이름에는 '/'와 같은 namespace 포함 불가.
+- init_node() 함수 자세히
+    : def init_node(name, argv=None, anonymous=False, log_level=None, disable_rostime=False, disable_rosout=False, disable_signals=False, xmlrpc_port=0, tcpros_port=0)
+    : 첫 번째 인자는 Node 이름. 타입: string
+    : 두 번째 인자는 argv. 사용자가 지정한 argument를 넘겨 받을 때 사용. 타입: string의 list
+    : 세 번째 인자는 anonymous. default로 False, 만약 True라면 노드의 이름이 자동 생성
+    : 네 번째 인자는 log_level. 타입: int
+    : 다섯 번째 인자는 disable_rostime. 내부적인 테스트에만 사용.
+    : 여섯 번째 인자는 disable_rosout. 내부적인 테스트에만 사용.
+    : 일곱 번째 인자는 disable_signals. True라면, rospy는 사용자의 signal handler를 등록 하지 않음.
+    : 여덟 번째 인자는 xmlrpc_port. client XMLRPC node에 대한 포트번호
+    : 아홉 번째 인자는 tcpros_port. TCPROS server는 이 포트를 통해 통신
+
+
+pub = rospy.Publisher('my_topic', String, queue_size=10)
+->  comment
+- 'my_topic' 이름의 토픽을 발행하기 위해, ROS 시스템에 Publisher로 등록
+- 토픽에 담는 메시지 타입은 String
+- String -> from std_msgs.msg import String에서의 String
+- 이후, String타입의 메시지를 발행할 때 -> pub.publish('Text here')
+
+
+rate = rospy.Rate(2)
+-> comment
+- 1초에 2번 loop를 반복할 수 있도록 rate라는 객체 만듦.
+    : 2Hz -> 0.5초에 한 번씩 루프 돌아야 함.
+    : 0.5초에 루프를 한 번씩 돌기 위해 0.5초짜리 타임 슬롯 만듬
+    : loop 안에 있는 타임 슬롯에 할당된 시간을 모두 소모한 수 다시 loop 반복.
+
+
+while not rospy.is_shutdown():
+-> comment
+- rospy.is_shutdown() == True가 될 때까지, loop 반복
+- rospy.is_shutdown() 함수는 rospy 내부의 shutdown_flag를 검사.
+
+
+    pub.publish('call me please')
+-> comment
+- 'my_topic'라는 이름의 토픽을 발행하기 위해 만든 Publisher 인스턴스
+- publish는 토픽에 데이터를 담아서 발행하는 기능 수행
+- publish는 2가지의 Exception 생길 수 있음.
+    : ROSException -> rospy 노드가 inilialization 되지 않았을 때 생기는 에러
+    : ROSSerializationException -> message를 serialize 할 수 없을 때, 보통 type error
+
+
+    rate.sleep()
+-> comment
+- rate는 rate=rospy.Rate(2)에서 만들어진 인스턴스
+- while 안에 있는 pub.publish 코드가 0.5초에 한 번씩 동작하게 함.
