@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="msg_send" type="sender_speed.py" name="sender_speed">
+        	<param name="data_size_" value="20"/>
+	</node>
+	<node pkg="msg_send" type="receiver_speed.py" name="receiver_speed" output="screen"/>
+</launch>
