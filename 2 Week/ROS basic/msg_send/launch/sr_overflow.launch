@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="msg_send" type="sender_overflow.py" name="sender_overflow"/>
+	<node pkg="msg_send" type="receiver_overflow.py" name="receiver_overflow" output="screen">
+			<param name="queue_size_" value="10000"/>
+	</node>
+</launch>
