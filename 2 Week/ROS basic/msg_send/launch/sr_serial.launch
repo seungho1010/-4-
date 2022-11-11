@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="msg_send" type="sender_serial.py" name="sender_serial">
+        	<param name="end_number" value="10"/>
+	</node>
+	<node pkg="msg_send" type="receiver_serial.py" name="receiver_serial" output="screen"/>
+</launch>
