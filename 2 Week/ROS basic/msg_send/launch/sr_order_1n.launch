@@ -1,0 +1,8 @@
+<launch>
+	<node name="publisher" pkg="msg_send" type="publisher.py" output="screen"/>	
+	<node name="receiver" pkg="msg_send" type="receiver.py" output="screen"/>
+	<node name="first" pkg="msg_send" type="first.py" output="screen"/>
+	<node name="second" pkg="msg_send" type="second.py" output="screen"/>
+	<node name="third" pkg="msg_send" type="third.py" output="screen"/>
+	<node name="fourth" pkg="msg_send" type="fourth.py" output="screen"/>
+</launch>
